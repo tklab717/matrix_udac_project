@@ -72,7 +72,7 @@ class Matrix(object):
             for j in range(self.h):
                 listb.append(self.g[j][i])
             lista.append(listb)
-        return lista
+        return Matrix(lista)
 
     def is_square(self):
         return self.h == self.w
@@ -115,7 +115,15 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
-
+        listi=[]
+        for i in range(self.h):
+            listj =[]
+            for j in range(self.w):
+                listj.append(self.g[i][j]+other.g[i][j])
+            listi.append(listj)
+        return Matrix(listi)
+                
+                
     def __neg__(self):
         """
         Defines the behavior of - operator (NOT subtraction)

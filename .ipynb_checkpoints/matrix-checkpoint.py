@@ -139,6 +139,15 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
+        listi=[]
+        for i in range(self.h):
+            listj =[]
+            for j in range(self.w):
+                listj.append(-self.g[i][j])
+            listi.append(listj)
+        return Matrix(listi)        
+        
+        
 
     def __sub__(self, other):
         """
@@ -147,6 +156,13 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
+        listi=[]
+        for i in range(self.h):
+            listj =[]
+            for j in range(self.w):
+                listj.append(self.g[i][j]-other.g[i][j])
+            listi.append(listj)
+        return Matrix(listi)
 
     def __mul__(self, other):
         """
@@ -155,6 +171,13 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
+        listi=[]
+        for i in range(other.w):
+            listj =[]
+            for j in range(self.h):
+                listj.append(sum([self.g[i][k]+other.g[k][i] for k in range(self.w)]))
+            listi.append(listj)
+        return Matrix(listi)
 
     def __rmul__(self, other):
         """

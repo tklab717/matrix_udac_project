@@ -18,6 +18,14 @@ def identity(n):
             I.g[i][i] = 1.0
         return I
 
+def factorial(n):
+    """
+    Calculate factorial
+    """
+    if n == 1:
+        return 1
+    return n*factorial(n-1)   
+    
 class Matrix(object):
 
     # Constructor
@@ -30,6 +38,8 @@ class Matrix(object):
     # Primary matrix math methods
     #############################
  
+
+    
     def determinant(self):
         """
         Calculates the determinant of a 1x1 or 2x2 matrix.
@@ -40,7 +50,16 @@ class Matrix(object):
             raise(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
         
         # TODO - your code here
-
+        num_value = factorial(self.w)
+        listh = []
+        for i in range(num_value):
+            listw = []
+            for j in range(self.h):
+                listw.append(self.g[j][-i])
+            listh.append(listw)
+        return Matrix(listh)     
+        
+        
     def trace(self):
         """
         Calculates the trace of a matrix (sum of diagonal entries).
@@ -49,7 +68,7 @@ class Matrix(object):
             raise(ValueError, "Cannot calculate the trace of a non-square matrix.")
 
         # TODO - your code here
-
+        
     def inverse(self):
         """
         Calculates the inverse of a 1x1 or 2x2 Matrix.
@@ -60,6 +79,15 @@ class Matrix(object):
             raise(NotImplementedError, "inversion not implemented for matrices larger than 2x2.")
 
         # TODO - your code here
+        listh = []
+        for i in range(self.w):
+            listw = []
+            for j in range(self.h):
+                listw.append(self.g[j][-i])
+            listh.append(listw)
+        return Matrix(listh)       
+        
+        
 
     def T(self):
         """
@@ -153,31 +181,28 @@ class Matrix(object):
         """
         Defines the behavior of - operator (as subtraction)
         """
-        #   
-        # TODO - your code here
-        #
-        listi=[]
+
+        listh=[]
         for i in range(self.h):
-            listj =[]
+            listw =[]
             for j in range(self.w):
-                listj.append(self.g[i][j]-other.g[i][j])
-            listi.append(listj)
-        return Matrix(listi)
+                listw.append(self.g[i][j]-other.g[i][j])
+            listh.append(listw)
+        return Matrix(listh)
 
     def __mul__(self, other):
         """
         Defines the behavior of * operator (matrix multiplication)
         """
-        #   
-        # TODO - your code here
-        #
-        listi=[]
+        if not self.w == other.h:
+            raise(ValueError, "Cannot calculate these matrix.")
+        listh=[]
         for i in range(other.w):
-            listj =[]
+            listw =[]
             for j in range(self.h):
-                listj.append(sum([self.g[i][k]+other.g[k][i] for k in range(self.w)]))
-            listi.append(listj)
-        return Matrix(listi)
+                listw.append(sum([self.g[i][k]+other.g[k][j] for k in range(self.w)]))
+            listh.append(listw)
+        return Matrix(listh)
 
     def __rmul__(self, other):
         """
@@ -191,9 +216,11 @@ class Matrix(object):
           2.0  0.0
           0.0  2.0
         """
+        listh=[]
         if isinstance(other, numbers.Number):
-            pass
-            #   
-            # TODO - your code here
-            #
-            
+            for i in range(self.h):
+                listw=[]
+                for j in range(self.w):
+                    listw.append(self.g[i][j]*other)
+                listh.append(listw)
+            return Matrix(listh)

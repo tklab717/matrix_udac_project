@@ -18,13 +18,45 @@ def identity(n):
             I.g[i][i] = 1.0
         return I
 
+    
 def factorial(n):
     """
     Calculate factorial
     """
     if n == 1:
         return 1
-    return n*factorial(n-1)   
+    return n*factorial(n-1) 
+
+
+def per(S,T,num):
+    """
+    Calculate permutation
+    
+    Args:
+        S:elemets of figure
+        T:List of permutation
+        num:the number of total permutation
+        
+    Returns:
+        List of permutation
+
+    Refference:
+        http://www.tbasic.org/reference/old/Permutation.html
+    """
+    
+    if len(S)==0:
+        return T
+    
+    get = len(S)
+    num_sel = num%get 
+
+    if get==0:
+        get=1
+    T_tmp=T
+    T_tmp.append(S.pop(num_sel))
+    
+    return(per(S,T_tmp,num/get))
+    
     
 class Matrix(object):
 

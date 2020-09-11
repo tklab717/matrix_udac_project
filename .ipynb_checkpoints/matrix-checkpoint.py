@@ -24,7 +24,25 @@ def factorial(n):
     """
     if n == 1:
         return 1
-    return n*factorial(n-1)   
+    return n*factorial(n-1) 
+
+def permutation(S,T,num):
+    """
+    Calculate permutation
+    """
+    print(S)
+    if len(S)==1:
+        #return　S.append(T[0])
+        pass
+        
+    
+    list_p = []
+    for i in range(len(S)-1)
+        ind = [True for i in range(len(S))]
+        ind[num]=False 
+        list_p.append(permutation(S[ind],T.append(S[num]),i))
+    return list_p
+    
     
 class Matrix(object):
 

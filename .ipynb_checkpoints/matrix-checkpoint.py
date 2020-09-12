@@ -1,6 +1,7 @@
 import math
 from math import sqrt
 import numbers
+import copy
 
 def zeroes(height, width):
         """
@@ -18,6 +19,7 @@ def identity(n):
             I.g[i][i] = 1.0
         return I
 
+    
 def factorial(n):
     """
     Calculate factorial
@@ -26,23 +28,57 @@ def factorial(n):
         return 1
     return n*factorial(n-1) 
 
-def permutation(S,T,num):
+
+def per(S,T,num):
     """
     Calculate permutation
-    """
-    print(S)
-    if len(S)==1:
-        #return　S.append(T[0])
-        pass
+    
+    Args:
+        S:elemets of figure
+        T:List of permutation
+        num:the number of total permutation
         
+    Returns:
+        List of permutation
+
+    Refference:
+        http://www.tbasic.org/reference/old/Permutation.html
+    """
     
-    list_p = []
-    for i in range(len(S)-1)
-        ind = [True for i in range(len(S))]
-        ind[num]=False 
-        list_p.append(permutation(S[ind],T.append(S[num]),i))
-    return list_p
+    if len(S)==0:
+        return T
     
+    get = len(S)
+    num_sel = num%get 
+
+    if get==0:
+        get=1
+    T_tmp=T
+    T_tmp.append(S.pop(num_sel))
+    
+    return(per(S,T_tmp,num/get))
+
+def sgns(ok,data):
+    """
+    Calculate sgn
+    
+    Args:
+        ok:right list for the order of figures
+        data:data for checking the order
+        
+    Returns:
+        If the order of the array needs to be changed an odd number of times, it returns 1.
+        If the order of the array needs to be changed an evenly number of times, it returns -1.
+    """
+    d = 0
+    for i in range(len(ok)):
+        d += abs(ok[i]-data[i])>0
+    if d ==0:
+        return 1
+    elif d%2==0:
+        return -1
+    else:
+        return 1
     
 class Matrix(object):
 
@@ -55,8 +91,6 @@ class Matrix(object):
     #
     # Primary matrix math methods
     #############################
- 
-
     
     def determinant(self):
         """
@@ -66,16 +100,24 @@ class Matrix(object):
             raise(ValueError, "Cannot calculate determinant of non-square matrix.")
         if self.h > 2:
             raise(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
-        
-        # TODO - your code here
-        num_value = factorial(self.w)
-        listh = []
-        for i in range(num_value):
-            listw = []
-            for j in range(self.h):
-                listw.append(self.g[j][-i])
-            listh.append(listw)
-        return Matrix(listh)     
+
+        #Create permutation
+        list_permutation =[]
+        num=self.w
+        data=[i+1 for i in range(num)]
+        for i in range(factorial(num)):
+            list_permutation.append(per(copy.copy(data),[],i))
+            
+        #Calculate determinant 
+        ok = [i+1 for i in range(num)]
+        all_v=0
+        for row in list_permutation:
+            value=1
+            for i in range(len(row)):
+                value*=self.g[ok[i]-1][row[i]-1]
+            all_v += sgns(ok,row)*value 
+               
+        return all_v  
         
         
     def trace(self):

@@ -71,15 +71,38 @@ def sgns(ok,data):
         If the order of the array needs to be changed an evenly number of times, it returns -1.
     """
     d = 0
-    for i in range(len(ok)):
-        d += abs(ok[i]-data[i])>0
-    if d ==0:
+    for i in range(len(data)):
+        for j in range(len(ok)):
+            if (data[j]==ok[i])&(j!=i):
+                d+=1
+                d_tmp=data[j]
+                data[j]=data[i]
+                data[i]=d_tmp
+    if d%2==0:
         return 1
-    elif d%2==0:
-        return -1
     else:
-        return 1
+        return -1
+  
+def cofactor(data,r_n,c_n):
+    """
+    Calculate cofactor
     
+    Args:
+        data:array
+        r_n:the number of row for calculating cofactor
+        c_n:the number of column for calculating cofactor
+    Return
+        determinant of cofactor with r_n,c_n
+    
+    """
+    d_tmp=copy.deepcopy(data.g)
+    n=(r_n+1)+(c_n+1)
+    k=(-1)**n
+    d_tmp.pop(r_n)
+    for i in range(len(d_tmp)):
+         d_tmp[i].pop(c_n)
+    return k*Matrix(d_tmp).determinant()
+
 class Matrix(object):
 
     # Constructor
@@ -98,8 +121,8 @@ class Matrix(object):
         """
         if not self.is_square():
             raise(ValueError, "Cannot calculate determinant of non-square matrix.")
-        if self.h > 2:
-            raise(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
+        #if self.h > 2:
+            #raise(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
 
         #Create permutation
         list_permutation =[]
@@ -138,19 +161,23 @@ class Matrix(object):
         """
         if not self.is_square():
             raise(ValueError, "Non-square Matrix does not have an inverse.")
-        if self.h > 2:
-            raise(NotImplementedError, "inversion not implemented for matrices larger than 2x2.")
+        #if self.h > 2:
+           # raise(NotImplementedError, "inversion not implemented for matrices larger than 2x2.")
 
         # TODO - your code here
-        listh = []
+        
+        if self.w == 1:
+            return Matrix([[1.0/self.g[0][0]]])
+        
+        array_row =[]
         for i in range(self.w):
-            listw = []
+            array_column=[]
             for j in range(self.h):
-                listw.append(self.g[j][-i])
-            listh.append(listw)
-        return Matrix(listh)       
-        
-        
+                array_column.append(cofactor(self,i,j))
+            array_row.append(array_column)
+        inverse = 1.0/self.determinant()*Matrix(array_row).T()
+
+        return inverse      
 
     def T(self):
         """
@@ -260,10 +287,10 @@ class Matrix(object):
         if not self.w == other.h:
             raise(ValueError, "Cannot calculate these matrix.")
         listh=[]
-        for i in range(other.w):
+        for i in range(self.h):
             listw =[]
-            for j in range(self.h):
-                listw.append(sum([self.g[i][k]+other.g[k][j] for k in range(self.w)]))
+            for j in range(other.w):
+                listw.append(sum([self.g[i][k]*other.T().g[j][k] for k in range(self.w)]))
             listh.append(listw)
         return Matrix(listh)
 
